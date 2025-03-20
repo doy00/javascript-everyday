@@ -46,3 +46,54 @@ let a = 5;
 let b = 10;
 [a, b] = [b,a];
 
+
+const makePerson = ({ familyName, givenName, address }) => {
+  return {
+    name: `${givenName} ${fmilyName}`,
+    address,
+  };
+};
+
+const person = makePerson({
+  familyName: 'Kim',
+  givenName: 'Dohee',
+  address: 'Seoul',
+  country: 'South Korea',
+});
+console.log(person);
+
+// 스프레드 연산자
+// 배열 병합
+const evenNumbers = [2, 4, 6, 8, 10];
+const oddNumbers = [1, 3, 5, 7, 9];
+const numbers = [...evenNumbers, ...oddNumbers];
+console.log(numbers);
+// 객체 병합
+const person2 = {
+  name: 'Dohee Kim',
+  familyName: 'Kim',
+  givenName: 'Dohee',
+  country: 'USA',
+};
+const address = {
+  country: 'South Korea',
+  city: 'Seoul',
+};
+const merge = { ...person, ...address};
+console.log(merge);
+
+// 배열 내 같은 요소 제거하기
+const names = ['Lee', 'Kim', 'Park', 'Lee', 'Kim'];
+const uniqueNames = [...new Set(names)];
+
+// &&와 || 연산자로 조건문 대체하기
+// 보통 && 연산자는 앞 요소를 플래그로 사용하여 플래그가 true면 뒤 요소를 실행할 때 사용합니다.
+const makeCompany = ( showAddress ) => {
+  return {
+    name: 'GoldenRabbit',
+    ...showAddress && {  address: 'Seoul' }
+  };
+};
+
+const guestname = participantName || 'Guest';
+
