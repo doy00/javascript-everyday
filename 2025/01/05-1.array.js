@@ -60,3 +60,45 @@ function solution(arr) {
 // a에서 b를 빼는 식을 사용한다면 a가 b보다 큰 경우 자연스럽게 양수가 반환되고 작은 경우엔 음수가 ㅏㄴ환됩니다.
 // 만약 반대로 내림차순으로 정렬한다면 두번째 인자에서 첫번째 인자를 빼도록 만들면 됩니다.
 // 참고로 sort() 메서드를 사용하면 기존 ㅐ열이 변경됩니다. 원본 배열을 그대로 두고 싶다면 toSorted() 메서드를 사용할 수도 있지만 비교적 최근에 추가된 기능이므로 sort() 메서드 사용을 추천합니다.
+
+// sort() 메서드를 사용하지 않고 O(N^2) 정렬 알고리즘을 사용하면?
+function bubbleSort(arr) { // 버블 정렬을 활용한 방법
+  const n = arr.length;
+  for (let i = 0; i < n; i++){
+    for (let j = 0; j < n - i - 1; j++){
+      if (arr[j + 1] < arr[j]) {
+        const tmp = arr[j + 1];
+        arr[j + 1] = arr[j];
+        arr[j] = tmp;
+      }
+    }
+  }
+  return arr;
+}
+
+function doSort(arr) {  // sort() 함수를 활용한 방법
+  arr.sort((a, b) => a - b);
+  return arr;
+}
+
+function measureTime(callback, arr) {
+  const start = Date.now();
+  const result = callback(arr);
+  const end = Date.now();
+  return [end - start, result];
+}
+
+let arrLength = Array.from({ length: 10000 }, (_, k) => 10000 - k);
+
+// 첫번째 코드 시간 측정
+// 첫번째 코드 실행 시간 : 2081ms
+const [bubbleTime, bubbleResult] = measureTime(bubbleSort, arr);
+console.log(`첫번째 코드 실행시간: ${bubbleTime}ms`);
+
+// 두번째 코드 시간 측정
+// 두번째 코드 실행 시간: 1ms
+arr = Array.from({ length: 10000 }, (_,k) => 10000 - k);
+const [doSortTime, doSortResult] = measureTime(doSort, arr);
+console.log(`두번째 코드 실행시간: ${doSortTime}ms`);
+
+// 첫번째 방법은 O(N^2) 정렬 알고리즘인 버블 정렬을 활용한 방법이고, 두번째 방법은 O(NlogN) 시간 복잡도의 sort() 함수를 활용한 방법입니다. 결과를 보면 시간 차가 상당합니다. 데이터 10,000개를 역순으로 정렬하는 데 버블 정렬은 2초가 걸렸지만 sort() 함수를 활용한 두번째 방법은 1밀리초 밖에 걸리지 않았습니다. 실행환경마다 시간의 차이는 조금 생길수 있겠지만 압도적으로 sort() 함수가 성능이 좋다는 것을 알수 있습니다. 이것으로 알고리즘의 시간 복잡도가 얼마나 중요한지 알아두기 바랍니다.
