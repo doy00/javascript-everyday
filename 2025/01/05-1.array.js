@@ -183,5 +183,18 @@ function 수포자(answers) {
       highestScores.push(i + 1)
     }
   }
-  return 
+  return highestScoresl
+}
+
+// 시간 복잡도 분석하기
+// N은 answers의 길이입니다. 각 수포자들의 패턴과 정답을 비교하는 부분은 O(N)입니다. 이후 scores를 순회하면서 가장 높은 점수를 받은 수포자를 추가하는 연산은 O(1)입니다. 따라서 최종 시간 복잡도는 O(N)입니다.
+
+// 문제 05. 2차원 행렬 arr1과 arr2를 입력받아 arr1에 arr2를 곱한 결과를 반환하는 solution() 함수를 완성하세요.
+
+// 문제 분석하기
+// 수학의 행렬 곱셈을 그대로 구현하면 됩니다. 두 배열의 최대 데이터 개수가 100개이므로 시간 복잡도는 신경쓰지 않아도 됩니다. 또한 곱할 수 있는 배열만 주어지므로 예외 처리도 없습니다.
+function 행렬의곱셈(arr1, arr2) {
+  // 행렬 arr1과 arr2의 행과 열의 수 
+  const r1 = arr1.length;
+  const c1 = arr1[0].length;행려
 }
