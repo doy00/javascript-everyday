@@ -224,3 +224,41 @@ function 행렬의곱셈(arr1, arr2) {
 
 // 시간 복잡도 분석하기
 // N은 행 혹은 열의 길이입니다. 행과 열의 길이는 같습니다. arr1의 행과 열 수를 r1, c1라고 하고, arr2의 행과 열 수 를 r2, c2라고 했을 때 r1 * c1 * c2만큼 연산합니다. r1, c1, r2, c2 모두 N으로 볼 수 있으므로 최종시간 복잡도는 O(N^2)입니다.
+
+// 06 실패율
+// 실패율 정의: 스테이지에 도달했으나 아직 클리어하지 못한 플레이어의수 / 스테이지에 도달한 플레이어의 수
+// 첫번째 입출력 예: 1번 스테이지에는 총 8명의 사용자가 도전했고 1명이 클리어하지 못함 -> 1번 스테이지 실패율: 1/8
+// 2번 스테이지: 총 7명의 사용자가 도전했으며, 3명의 사용자가 클리어하지 못함 -> 2번 스테이지 실패율: 3/7
+// 3번 스테이지: 2/4
+// 4번 스테이지: 1/2
+// 5번 스테이지: 0/1
+function 실패율(N, stages) {
+  // 1. 스테이지별 도전자 수를 구함
+  const challenger = new Array(N + 2).fill(0);
+  for (const stage of stages) {
+    challenger[stage] += 1;
+  }
+  // 2. 스테이지별 실패한 사용자 수 계산
+  const fails = {};
+  let total = stages.length;
+
+  // 각스테이지를 순회하며, 실패율 계산
+  for (let i = 1; i <= N; i++) {
+    if (challenger[i] === 0) {
+      // 4. 도전한 사람이 없는 경우, 실패율은 0
+      fails[i] = 0;
+      continue;
+    }
+
+    // 5. 실패율 계산
+    fails[i] = challenger[i] / total;
+
+    // 6. 다음 스테이지 실패율을 구하기 위해 현재 스테이지의 인원을 뺌
+    total -= challenger[i];
+  }
+  // 7. 실패율이 높은 스테이지부터 내림차순으로 정렬
+  const result = Object.entries(fails).sort((a, b) => b[1] - a[1]);
+
+  // 8. 스테이지 번호만 반환
+  return result.map((v) => Number(v[0]));
+}
