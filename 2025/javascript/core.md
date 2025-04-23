@@ -95,3 +95,29 @@ var outer = function () {
 outer();
 ```
 outer 함수에서 변수 a를 선언했고, outer의 내부함수인 inner 함수에서 a의 값을 1만큼 증가시킨 다음 출력합니다.
+
+```
+var outer = function () {
+  var a = 1;
+  var inner = function () {
+    return ++a;
+  };
+  return inner();
+};
+var outer2 = outer();
+console.log(outer2); // 2
+```
+위에서도 inner 함수 내부에서 외부 변수인 a를 사용했습니다. 그런데 innter 함수를 실행한 결과를 리턴하고 있으므로 결과적으로 outer ㅎ마수의 실행 컨텍스트가 종료된 시점에서는 a 변수를 참조하는 대상이 없어집니다. 
+outer 함수의 실행 컨텍스트가 종료되기 이전에 inner 함수의 실행 컨텍스트가 종료돼있으며, 이후 별도로 inner 함수를 호출할 수 없다는 공통점이 있습니다. 
+
+```
+var outer = function () {
+  var a = 1;
+  var inner = function () {
+    return ++a;
+  };
+  return inner;
+};
+var outer2 = outer();
+```
+다시 outer2를 호출하면 a의 값을 1 증가시킨 후 3을 반환합니다. 
