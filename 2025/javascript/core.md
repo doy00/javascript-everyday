@@ -121,3 +121,6 @@ var outer = function () {
 var outer2 = outer();
 ```
 다시 outer2를 호출하면 a의 값을 1 증가시킨 후 3을 반환합니다. 
+
+outer 함수의 LexicalEnvironment에 접근할 수 있는 이유? 가비지 컬렉터가 어떤 값을 참조하는 변수가 하나라도 있을 때 수집하지 않기 때문
+outer의 종료 시점에 inner 함수를 반환합니다. outer의 실행이 종료된 후 내부 함수인 inner는 outer2에서 호출될 수 있음.
