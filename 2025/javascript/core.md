@@ -124,3 +124,21 @@ var outer2 = outer();
 
 outer 함수의 LexicalEnvironment에 접근할 수 있는 이유? 가비지 컬렉터가 어떤 값을 참조하는 변수가 하나라도 있을 때 수집하지 않기 때문
 outer의 종료 시점에 inner 함수를 반환합니다. outer의 실행이 종료된 후 내부 함수인 inner는 outer2에서 호출될 수 있음.
+
+선언한 변수를 참조하는 내부 함수에서만  발생하는 현상이란 '외부 함수의 LexicalEnvironment가 gc되지 않는 현상'
+(lexcialEnvironment가 참조할 다른 실행 컨텍스트가 잇는 한 실행 종료되어도 gc되지 않는다. 다만 시점은 정확히 알수 없음?) 
+
+* '외부로 전달'이 곧 return만을 의미하는 것은 아니다. 
+```
+// setInterval/setTimeout
+(function () {
+  var a = 0;
+  var intervalId = null;  // 빈 intervalId 만들기
+  var inner = function () {  
+    if (++a >= 10) {
+      clearInterval(intervalId);
+    }
+  };
+  intervalId = setInterval(inner, 1000);  // 외부객체 window의 setTimeout, setInterval에 전달할 콜백함수 내부에서 지역변수를 참조함
+})();
+```
