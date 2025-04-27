@@ -274,3 +274,21 @@ function 실패율(N, stages) {
 // 유의할 점
 // 1. 중복 경로는 최종 길이에 포함하지 않는다는 조건입니다. 
 // 2. 음수 좌표를 포함한다는 점입니다. 2차원배열에서 음수 인덱스를 사용할 수 는 없으므로 다른 방법을 생각해야 합니다. 좌표는 방향에 의해서만 제어되므로 원점을 (0, 0)에서 (5, 5)로 바꿔 음수 좌표 문제를 해결해도 됩니다.
+
+function isValidMove(nx, ny) {
+  return nx >= -5 && nx <= 5 && ny >= -5 && ny <= 5;  // 좌표평면을 벗어나는지 체크
+}
+
+function updateLocation(x, y, dir) {
+  switch (dir) {
+    case "U":
+      return [x, y+1];
+    case "D":
+      return [x, y-1];
+    case "R":
+      return [x+1, y];
+    case "L":
+      return [x-1, y];
+  }
+}
+
