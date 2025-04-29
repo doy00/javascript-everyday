@@ -279,7 +279,7 @@ function isValidMove(nx, ny) {
   return nx >= -5 && nx <= 5 && ny >= -5 && ny <= 5;  // 좌표평면을 벗어나는지 체크
 }
 
-function updateLocation(x, y, dir) {
+function updateLocation(x, y, dir) {  // 다음 좌표 결정
   switch (dir) {
     case "U":
       return [x, y+1];
@@ -292,3 +292,20 @@ function updateLocation(x, y, dir) {
   }
 }
 
+function 방문길이(dirs) {
+  let x = 0;
+  let y = 0;
+
+  const visited = new Set();  // 이미 지난 좌표는 1개로 처리
+  for (const dir of dirs) {
+    // updateLocation의 명령어로 움직이면서 좌표 저장
+    const [nx, ny] = updateLocation(x, y, dir);
+
+    if (!isValidMove(nx, ny)) {
+      // 벗어난 좌표는 인정하지 않음
+      continue;
+    }
+
+    // 
+  }
+}
