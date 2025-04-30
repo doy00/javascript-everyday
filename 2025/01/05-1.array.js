@@ -276,11 +276,11 @@ function 실패율(N, stages) {
 // 2. 음수 좌표를 포함한다는 점입니다. 2차원배열에서 음수 인덱스를 사용할 수 는 없으므로 다른 방법을 생각해야 합니다. 좌표는 방향에 의해서만 제어되므로 원점을 (0, 0)에서 (5, 5)로 바꿔 음수 좌표 문제를 해결해도 됩니다.
 
 function isValidMove(nx, ny) {
-  return nx >= -5 && nx <= 5 && ny >= -5 && ny <= 5;  // 좌표평면을 벗어나는지 체크
+  return nx >= -5 && nx <= 5 && ny >= -5 && ny <= 5;  // 좌표평면을 벗어나는지 체크하는 함수를 핵심 알고리즘과 분리
 }
 
 function updateLocation(x, y, dir) {  // 다음 좌표 결정
-  switch (dir) {
+  switch (dir) {  // 현재 좌표의 방향 dir
     case "U":
       return [x, y+1];
     case "D":
@@ -296,7 +296,7 @@ function 방문길이(dirs) {
   let x = 0;
   let y = 0;
 
-  const visited = new Set();  // 이미 지난 좌표는 1개로 처리
+  const visited = new Set();  // 이미 지난 좌표(중복)는 Set 함수로 1개로 처리
   for (const dir of dirs) {
     // updateLocation의 명령어로 움직이면서 좌표 저장
     const [nx, ny] = updateLocation(x, y, dir);
@@ -306,6 +306,12 @@ function 방문길이(dirs) {
       continue;
     }
 
-    // 
+    // A -> B로 간 경우 B -> A도 추가하고 나중에 최종 이동 길이를 2로 나눔
+    // 총 경로의 개수는 방향성이 없음
+    visited.add(`${x}${y}${nx}${ny}`);  // '(x,y)에서 (nx, ny)까지의 경로를 방문했다'고 기록하는 것을 의미함
+    visited.add(`${nx}${ny}${x}${y}`);
+
+    [x, y] = [nx, ny];  // 좌표 업데이트
   }
+  return visited.size / 2;
 }
