@@ -1,10 +1,11 @@
 function solution(n, vertex) {
     const graph = Array.from({ length: n + 1 }, () => []);
     
-    vertex.forEach(([a, b]) => {
+    for (const [a, b] of vertex) {
         graph[a].push(b);
         graph[b].push(a);
-    });
+    }
+
     
     const distances = Array(n + 1).fill(-1);
     const queue = [1];
@@ -21,7 +22,7 @@ function solution(n, vertex) {
         }
     }
     
-    const maxDistance = Math.max(...distances.slice(1));
+    const maxDistance = Math.max(...distances);
     
     return distances.filter(distance => distance === maxDistance).length;
 }
