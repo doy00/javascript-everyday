@@ -1,64 +1,93 @@
-function solution(input) {
-  const lines = input.trim().split('\n');
-  const N = parseInt(lines[0]);
-  const board = lines.slice(1).map((line) => line.split(' ').map(Number));
 
-  // 파이프 방향 상수
-  const HORIZONTAL = 0;  // 가로
-  const VERTICAL = 1;  // 세로
-  const DIAGONAL = 2;  // 대각선
+// 입력을 한 줄씩 읽어와 배열로 저장
+const input = require('fs')
+  .readFileSync('/dev/stdin')
+  .toString()
+  .trim()
+ .split('\n');
 
-  // 방향별 이동 가능한 다음 방향
-  // [다음 행 증가량, 다음 열 증가량, 다음 방향]
-  const moves = [
-    [[0, 1, HORIZONTAL], [1, 1, DIAGONAL]],
-    [[1, 0, VERTICAL], [1, 1, DIAGONAL]],
-    [[0, 1, HORIZONTAL], [1, 0, VERTICAL], [1, 1, DIAGONAL]]
-  ];
+const N = parseInt(input[0]); // 집의 크기 36칸
+const board = [[]]; // board 배열 생성
+for (let i = 1; i <= N; i++) {
+  board[i] = [0, ...input[i].split(' ').map(Number)];
+}
 
-  function canMove(r, c, nextDirection) {
-    // 이동 가능 여부 체크
-    if (r < 0 || r >= N || c < 0 || c >= N) return false;
-    if (board[r][c] === 1) return false;
+function solution(N, board) {
+  // 메모 배열 생성 -> 가로 세로 대각선 -1 초기화
+  const memo = Array.from({ length: N + 1 }, () =>
+    Array.from({ length: N + 1 }, () => [-1, -1, -1])
+  );
 
-    // 대각선은 세칸을 확인해야함
-    if (nextDirection === DIAGONAL) {
-      // (r-1, c), (r, c-1), (r, c) 모두 빈 칸이어야 함
-      if (board[r-1][c] === 1 || board[r][c-1] === 1) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  function dfs(r, c, direction) {
-    // 종료조건: 파이프 끝이 (N-1, N-1)에 도달
-    if (r === N-1 && c === N-1) {
-      return 1;
-    }
+  // dfs이용
+  function dfs(r, c, dir) {
+    // 도착지점에 도달했을 때
+    if (r === N && c === N) return 1;
+    // 범위 벗어날 때
+    if (r > N || c > N) return 0;
+    // -1이 아님 -> 방문함 => 이미 방문을 했으면 해당 memo에 저장된 값 그대로 반환
+    if (memo[r][c][dir] !== -1) return memo[r][c][dir];
 
     let count = 0;
 
-    // 현재 방향에서 가능한 모든 이동 시도
-    for (const [dr, dc, nextDirection] of moves[direction]) {
-      const nr = r + dr;
-      const nc = c + dc;
-
-      // 이동 가능한지 체크
-      if (canMove(nr, nc, nextDirection)) {
-        count += dfs(nr, nc, nextDirection);
+    // 현재 파이프가 가로 방향일 때 (가로 = 0, 세로 = 1, 대각선 = 2)
+    if (dir === 0) {
+      // → 이동
+      if (c + 1 <= N && board[r][c + 1] === 0) {
+        count += dfs(r, c + 1, 0);
+      }
+      // ↘ 이동
+      if (
+        r + 1 <= N &&
+        c + 1 <= N &&
+        board[r][c + 1] === 0 &&
+        board[r + 1][c] === 0 &&
+        board[r + 1][c + 1] === 0
+      ) {
+        count += dfs(r + 1, c + 1, 2);
+      }
+    } else if (dir === 1) {
+      // ↓ 이동
+      if (r + 1 <= N && board[r + 1][c] === 0) {
+        count += dfs(r + 1, c, 1);
+      }
+      // ↘ 이동
+      if (
+        r + 1 <= N &&
+        c + 1 <= N &&
+        board[r][c + 1] === 0 &&
+        board[r + 1][c] === 0 &&
+        board[r + 1][c + 1] === 0
+      ) {
+        count += dfs(r + 1, c + 1, 2);
+      }
+    } else {
+      // → 이동
+      if (c + 1 <= N && board[r][c + 1] === 0) {
+        count += dfs(r, c + 1, 0);
+      }
+      // ↓ 이동
+      if (r + 1 <= N && board[r + 1][c] === 0) {
+        count += dfs(r + 1, c, 1);
+      }
+      // ↘ 이동
+      if (
+        r + 1 <= N &&
+        c + 1 <= N &&
+        board[r][c + 1] === 0 &&
+        board[r + 1][c] === 0 &&
+        board[r + 1][c + 1] === 0
+      ) {
+        count += dfs(r + 1, c + 1, 2);
       }
     }
+
+    // 계산한 결과를 저장함
+    // dfs(3, 4, 0)을 처음 호출 → count = 10 계산 → memo[3][4][0] = 10 저장 -> dfs(3, 4, 0)을 또 호출 → memo[3][4][0] !== -1이므로 계산 없이 바로 10 반환
+    memo[r][c][dir] = count;
     return count;
   }
-  return dfs(0, 1, HORIZONTAL);
+
+  // 여기서부터 시작
+  return dfs(1, 2, 0);
 }
-
-
-// 백준 제출용 코드
-const fs = require('fs');
-const path = require('path');
-const filePath = process.platform === 'linux' ? '/dev/stdin' : path.join(__dirname, 'input1.txt');
-const input = fs.readFileSync(filePath).toString();
-console.log(solution(input));
+console.log(solution(N, board));
